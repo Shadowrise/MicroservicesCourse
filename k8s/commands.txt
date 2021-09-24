@@ -2,7 +2,10 @@
 kubectl get pods
 kubectl get services
 
-kubectl apply -f platforms-depl.yaml
-kubectl delete deployment platforms-depl
+kubectl apply -f k8s/platforms.yaml
+kubectl rollout restart deployment platforms
+kubectl delete deployment platforms
 
-kubectl apply -f platforms-np-srv.yaml
+kubectl apply -f k8s/commands.yaml
+kubectl rollout restart deployment commands
+kubectl delete deployment commands

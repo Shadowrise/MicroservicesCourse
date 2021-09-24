@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using PlatformService.Models;
+using PlatformsService.Models;
 
-namespace PlatformService.Data
+namespace PlatformsService.Data
 {
     class PlatformRepo : IPlatformRepo
     {
