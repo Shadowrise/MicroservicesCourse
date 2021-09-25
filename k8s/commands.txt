@@ -1,6 +1,11 @@
 ﻿kubectl get deployments
 kubectl get pods
+kubectl get pods --namespace=ingress-nginx
 kubectl get services
+kubectl get services --namespace=ingress-nginx
+kubectl get namespace
+kubectl get storageclass
+kubectl get pvc
 
 kubectl apply -f k8s/platforms.yaml
 kubectl rollout restart deployment platforms
@@ -9,3 +14,11 @@ kubectl delete deployment platforms
 kubectl apply -f k8s/commands.yaml
 kubectl rollout restart deployment commands
 kubectl delete deployment commands
+
+kubectl apply -f k8s/ingress-nginx.yaml
+kubectl apply -f k8s/local-pvc.yaml
+
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.0.1/deploy/static/provider/cloud/deploy.yaml
+
+kubectl create secret generic mssql --from-literal=SA_PASSWORD="Pa55w0rd!"
+kubectl get secret mssql -o jsonpath="{.data.SA_PASSWORD}"

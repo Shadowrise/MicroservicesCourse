@@ -1,6 +1,7 @@
 using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using PlatformsService.Data;
@@ -12,7 +13,18 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new() { Title = "PlatformsService", Version = "v1" }); });
-builder.Services.AddDbContext<AppDbContext>(opt => opt.UseInMemoryDatabase("InMemory"));
+builder.Services.AddDbContext<AppDbContext>(opt =>
+{
+    if (builder.Environment.IsDevelopment())
+    {
+        opt.UseInMemoryDatabase("InMemoryDb");   
+    }
+    else
+    {
+        opt.UseSqlServer(builder.Configuration.GetConnectionString("MsSqlDb"));
+    }
+});
+
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddScoped<IPlatformRepo, PlatformRepo>();
@@ -33,6 +45,11 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+if (builder.Environment.IsProduction())
+{
+    app.MigrateDatabase();
+}
 
 app.SeedDatabase();
 
